@@ -4,7 +4,8 @@ trigger:
 
 # Define the pool to use for the pipeline
 pool:
-  vmImage: ubuntu-latest
+  vmImage: Default
+
 
 # Steps to be executed in the pipeline
 steps:
