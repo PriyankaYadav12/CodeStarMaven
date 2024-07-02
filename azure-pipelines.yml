@@ -1,0 +1,34 @@
+# Trigger the pipeline on changes to the master branch
+trigger:
+- master
+
+# Define the pool to use for the pipeline
+pool:
+  vmImage: ubuntu-latest
+
+# Steps to be executed in the pipeline
+steps:
+# Step 1: Run Maven to build the project and run tests
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'package'
+
+# Step 2: Prepare SonarQube analysis
+- task: SonarQubePrepare@6
+  inputs:
+    SonarQube: 'AzureSonarSC'
+    scannerMode: 'MSBuild'
+    projectKey: 'sqa_ac825daf361572f607f3c13a589c1060431ac76c'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+
+# Add any additional steps such as SonarQube analysis, saving build artifacts, deployment, etc.
+
